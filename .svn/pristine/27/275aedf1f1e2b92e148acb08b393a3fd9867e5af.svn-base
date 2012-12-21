@@ -1,0 +1,131 @@
+import java.awt.event.*;
+
+import javax.swing.*;
+import javax.swing.event.*;
+
+import java.text.DecimalFormat;
+
+public class Window extends JFrame {
+	private static final long serialVersionUID = -8255319694373975038L;
+	private final Canvas canvas = new Canvas();
+
+	public Window () {
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(752, 502);
+		setResizable(false);
+		setTitle("Waves");
+		
+		add(new Options());
+		add(canvas);
+		
+		setVisible(true);
+	}
+	
+	public static void main (String[] argv) {
+		Window window = new Window();
+		
+		while (true) {
+			window.repaint();
+		}
+	}
+	
+	private class Options extends JPanel {
+		private static final long serialVersionUID = -3230902972827554859L;
+		
+		private final JButton setup = new JButton("Setup");
+		private final JButton start = new JButton("Start");
+
+		private final JSlider friction = new JSlider(0, 99);
+		private final JLabel currentFriction = new JLabel("Friction: 0");
+		private final JSlider amplitude = new JSlider(0, 99);
+		private final JLabel currentAmplitude = new JLabel("Amplitude: 50");
+		private final JSlider frequency = new JSlider(0, 200);
+		private final JLabel currentFrequency = new JLabel ("Frequency: 5.0");
+		
+		private final JCheckBox fixedEnd = new JCheckBox("Fixed End?");
+		
+		public Options () {
+			// Add event listeners.
+			setup.addActionListener(new buttonListener());
+			start.addActionListener(new buttonListener());
+			friction.addChangeListener(new sliderListener());
+			amplitude.addChangeListener(new sliderListener());
+			frequency.addChangeListener(new sliderListener());
+			fixedEnd.addChangeListener(new fixedEndListener());
+			
+			// Set the size of the options pane (200 by 500 pixels)
+			this.setSize(200, 500);
+			
+			// Add buttons at the top.
+			this.add(setup);
+			this.add(start);
+			
+			// Add the friction slider.
+			add(currentFriction);
+			friction.setMajorTickSpacing(10);
+			friction.setPaintTicks(true);
+			add(friction);
+			
+			// Add the amplitude slider.
+			add(currentAmplitude);
+			amplitude.setMajorTickSpacing(10);
+			amplitude.setPaintTicks(true);
+			this.add(amplitude);
+			
+			// Add the frequency slider.
+			add(currentFrequency);
+			frequency.setMajorTickSpacing(20);
+			frequency.setPaintTicks(true);
+			add(frequency);
+			
+			// The Frequency fine adjustment slider...
+//			add(new JLabel("Frequency fine adjustment"));
+//			add(new JSlider(0, 1));
+			
+			// Add the fixed end check box.
+			this.add(fixedEnd);
+			
+		}
+		
+		private class sliderListener implements ChangeListener {
+			final private DecimalFormat df = new DecimalFormat("##.#");
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				JSlider source = (JSlider) ce.getSource();
+				
+				if (source == friction) {
+					currentFriction.setText("Friction: " + friction.getValue());
+				} else if (source == amplitude) {
+					currentAmplitude.setText("Amplitude: " + amplitude.getValue());
+					canvas.getWave().setAmplitude(amplitude.getValue());
+				} else if (source == frequency){
+					currentFrequency.setText("Frequency: " + df.format(frequency.getValue()*.1));
+					canvas.getWave().setFrequency(frequency.getValue());
+				}
+			}
+		}
+		
+		private class buttonListener implements ActionListener {
+
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				JButton source = (JButton) ae.getSource();
+				
+				if (source == setup) {
+					// Do Something when setup is clicked.
+				} else if (source == start) {
+					// Do Something when start is clicked.
+				}
+			}
+		}
+		
+		private class fixedEndListener implements ChangeListener {
+
+			@Override
+			public void stateChanged(ChangeEvent ce) {
+				// Do Something with the Fixed End checkbox.
+			}
+			
+		}
+	}
+}

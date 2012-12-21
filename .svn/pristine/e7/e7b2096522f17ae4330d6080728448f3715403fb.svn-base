@@ -1,0 +1,47 @@
+import java.awt.Dimension;
+
+import javax.swing.*;
+
+/**
+ * 
+ * @author havvy, b.locke, l.kartashev
+ *
+ */
+public class Window extends JFrame {
+	private static final long serialVersionUID = -8255319694373975038L;
+
+	public Window (Wave topWave, Wave bottomWave) {
+		Options topOptions = new Options(topWave);
+		Options bottomOptions = new Options(bottomWave);
+		Canvas canvas = new Canvas(topWave, bottomWave);
+		SetupAndGo buttons = new SetupAndGo(canvas);
+		
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setSize(1050, 500);
+		//setResizable(false);
+		setTitle("Waves");
+		setLayout(new RiverLayout());
+		
+		JPanel 	left = new JPanel();
+				left.setPreferredSize(new Dimension(200,550));
+				left.add(buttons);
+				left.add(topOptions);
+		
+		add("left", left);
+		add("left", canvas);
+		add("right bottom", bottomOptions);
+		
+		setVisible(true);
+	}
+	
+	public static void main (String[] argv) {
+		Wave topWave = new Wave();
+		Wave bottomWave = new Wave();
+		
+		Window window = new Window(topWave, bottomWave);
+		
+		while (true) {
+			window.repaint();
+		}
+	}
+}
